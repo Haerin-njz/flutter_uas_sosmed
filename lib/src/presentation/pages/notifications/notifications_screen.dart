@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uas/data/dummy_data.dart';
-import 'package:uas/src/infrastructure/providers/notification_providers.dart';
+import 'package:flutter_uas_sosmed/infrastructure/providers/notification_providers.dart'; 
+import 'package:flutter_uas_sosmed/data/dummy_data.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
