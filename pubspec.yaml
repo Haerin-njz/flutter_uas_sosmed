@@ -48,6 +48,9 @@ dependencies:
   image_picker: ^1.0.0
   firebase_storage: ^11.3.2
 
+  # UUID generator for unique IDs
+  uuid: ^4.0.0
+
 
   
   # Firebase scaffold packages (disabled by default until you configure a project)

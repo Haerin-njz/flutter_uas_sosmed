@@ -7,7 +7,7 @@ class PostUploadService {
     final id = const Uuid().v4();
     final ref = FirebaseStorage.instance.ref().child("posts/$id");
 
-    final uploadTask = await ref.putFile(file);
+    await ref.putFile(file);
     return await ref.getDownloadURL();
   }
 }

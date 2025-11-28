@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/story_list.dart';
 import '../../widgets/post_card.dart';
-import '../../../infrastructure/providers/story_providers.dart';
-import '../../../infrastructure/providers/post_providers.dart';
+import '../../../../infrastructure/providers/story_providers.dart';
+import '../../../../infrastructure/providers/post_providers.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
