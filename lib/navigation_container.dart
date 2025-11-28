@@ -18,13 +18,19 @@ class ScaffoldWithNavBar extends StatelessWidget {
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
-        onTap: (i) => navigationShell.goBranch(i),
-        items: [
-          const BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
-          const BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          const BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined), label: 'Add'),
-          const BottomNavigationBarItem(icon: Icon(Icons.video_library_outlined), label: 'Reels'),
-          const BottomNavigationBarItem(icon: CircleAvatar(radius: 12, backgroundColor: Colors.grey), label: 'Profile'),
+        onTap: (i) {
+          if (i == 2) {
+            context.push('/add');   // ← buka halaman AddPostScreen
+          } else {
+            navigationShell.goBranch(i);  // ← pindah tab lain
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined), label: 'Add'),
+          BottomNavigationBarItem(icon: Icon(Icons.video_library_outlined), label: 'Reels'),
+          BottomNavigationBarItem(icon: CircleAvatar(radius: 12, backgroundColor: Colors.grey), label: 'Profile'),
         ],
       ),
     );
