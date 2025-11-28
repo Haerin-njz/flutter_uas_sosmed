@@ -11,7 +11,7 @@ part 'login_controller.g.dart';
 class LoginController extends _$LoginController {
   @override
   FutureOr<void> build() async {
-    // initial state - nothing to load here
+    
     return;
   }
 
@@ -19,7 +19,7 @@ class LoginController extends _$LoginController {
     state = const AsyncValue.loading();
     try {
       final repo = ref.read(authRepositoryProvider);
-      // Find a user with matching email (mock behavior)
+  
       final matched = dummyUsers.firstWhere(
         (u) => u.email.toLowerCase() == email.toLowerCase(),
         orElse: () => dummyUsers[0],
@@ -27,7 +27,7 @@ class LoginController extends _$LoginController {
 
       await repo.signIn(email, password);
 
-      // Set current user to the matched user (mock auth)
+      
       ref.read(authStateProvider.notifier).signInAs(matched);
 
       state = const AsyncValue.data(null);
