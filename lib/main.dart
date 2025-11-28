@@ -1,84 +1,86 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-import 'navigation_container.dart';
-import 'features/posts/presentation/add_post_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'src/infrastructure/providers/auth_state_provider.dart';
+import 'router.dart' as app_router;
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: UasApp()));
 }
 
-final GoRouter router = GoRouter(
-  routes: [
-    StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) =>
-          ScaffoldWithNavBar(navigationShell: navigationShell),
-      branches: [
-        // HOME
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/home',
-              builder: (context, state) =>
-                  const Center(child: Text("Home")),
-            ),
-          ],
-        ),
-
-        // SEARCH
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/search',
-              builder: (context, state) =>
-                  const Center(child: Text("Search")),
-            ),
-          ],
-        ),
-
-        // ADD
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/add',
-              builder: (context, state) => const AddPostScreen(),
-            ),
-          ],
-        ),
-
-        // REELS
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/reels',
-              builder: (context, state) =>
-                  const Center(child: Text("Reels")),
-            ),
-          ],
-        ),
-
-        // PROFILE
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/profile',
-              builder: (context, state) =>
-                  const Center(child: Text("Profile")),
-            ),
-          ],
-        ),
-      ],
-    ),
-  ],
-);
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class UasApp extends ConsumerWidget {
+  const UasApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final base = ThemeData.dark(useMaterial3: true);
+    final theme = base.copyWith(
+      scaffoldBackgroundColor: const Color(0xFF000000),
+      colorScheme: base.colorScheme.copyWith(
+        primary: const Color(0xFF405DE6), // Instagram blue
+        secondary: const Color(0xFFC13584), // Instagram pink
+        surface: const Color(0xFF121212),
+        onSurface: Colors.white,
+      ),
+      textTheme: GoogleFonts.interTextTheme(base.textTheme)
+          .apply(bodyColor: Colors.white, displayColor: Colors.white)
+          .copyWith(
+            headlineSmall: GoogleFonts.inter(
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+            titleLarge: GoogleFonts.inter(
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              fontSize: 24,
+            ),
+          ),
+      appBarTheme: base.appBarTheme.copyWith(
+        backgroundColor: const Color(0xFF000000),
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        titleTextStyle: GoogleFonts.inter(
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+          fontSize: 20,
+        ),
+      ),
+      cardTheme: base.cardTheme.copyWith(
+        color: const Color(0xFF1E1E1E),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: const Color(0xFF2A2A2A),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        hintStyle: const TextStyle(color: Colors.grey),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF405DE6),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+        ),
+      ),
+    );
+
+    final signedIn = ref.watch(authStateProvider) != null;
+    final router = app_router.createRouter(signedIn: signedIn);
+
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      theme: theme,
       routerConfig: router,
+      title: 'Instagram Clone',
     );
   }
 }
