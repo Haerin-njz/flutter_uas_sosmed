@@ -1,26 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../features/stories/data/story_model.dart';
+import '../../domain/entities/story.dart';
+import '../../domain/repositories/story_repository.dart';
+import '../../data/repositories/mock_story_repository.dart';
 
-// Gunakan List<Story>, bukan StoryModel
+final storyRepositoryProvider = Provider<StoryRepository>((ref) {
+  return MockStoryRepository();
+});
+
 final storiesProvider = FutureProvider<List<Story>>((ref) async {
-  await Future.delayed(const Duration(milliseconds: 500));
-  
-  // Return data dummy
-  return [
-    Story(
-      id: '1',
-      userId: 'user1',
-      userName: 'Jojo',
-      userAvatar: 'https://i.pravatar.cc/150?img=11',
-      mediaUrls: ['https://picsum.photos/500/800'],
-      createdAt: DateTime.now(),
-    ),
-    Story(
-      id: '2',
-      userId: 'user2',
-      userName: 'Haerin',
-      mediaUrls: ['https://picsum.photos/500/801'],
-      createdAt: DateTime.now(),
-    ),
-  ];
+  final repo = ref.read(storyRepositoryProvider);
+  return repo.fetchStories();
 });

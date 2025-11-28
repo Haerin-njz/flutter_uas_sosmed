@@ -7,18 +7,18 @@ part of 'post.dart';
 // **************************************************************************
 
 _$PostImpl _$$PostImplFromJson(Map<String, dynamic> json) => _$PostImpl(
-      id: json['id'] as String,
-      imageUrl: json['imageUrl'] as String,
-      caption: json['caption'] as String?,
-      authorId: json['authorId'] as String,
-      authorName: json['authorName'] as String,
-      authorAvatar: json['authorAvatar'] as String?,
-      likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
-      liked: json['liked'] as bool? ?? false,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-    );
+  id: json['id'] as String,
+  imageUrl: json['imageUrl'] as String,
+  caption: json['caption'] as String?,
+  authorId: json['authorId'] as String,
+  authorName: json['authorName'] as String,
+  authorAvatar: json['authorAvatar'] as String?,
+  likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
+  liked: json['liked'] as bool? ?? false,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+);
 
 Map<String, dynamic> _$$PostImplToJson(_$PostImpl instance) =>
     <String, dynamic>{
