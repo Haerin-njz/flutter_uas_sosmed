@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../features/stories/data/story_model.dart';
 
-typedef StoryTapCallback = void Function(StoryModel story);
+// Ubah StoryModel jadi Story
+typedef StoryTapCallback = void Function(Story story);
 
 class StoryList extends StatelessWidget {
-  final List<StoryModel> stories;
+  final List<Story> stories;
   final StoryTapCallback? onStoryTap;
 
   const StoryList({super.key, required this.stories, this.onStoryTap});
@@ -22,9 +23,23 @@ class StoryList extends StatelessWidget {
             onTap: () => onStoryTap?.call(s),
             child: Column(
               children: [
-                CircleAvatar(radius: 30, child: Text(s.userId.isNotEmpty ? s.userId[0].toUpperCase() : '?')),
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: (s.userAvatar != null) ? NetworkImage(s.userAvatar!) : null,
+                  child: (s.userAvatar == null)
+                      ? Text(s.userName.isNotEmpty ? s.userName[0].toUpperCase() : '?')
+                      : null,
+                ),
                 const SizedBox(height: 6),
-                SizedBox(width: 70, child: Text('Story', overflow: TextOverflow.ellipsis, textAlign: TextAlign.center)),
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    s.userName, // Tampilkan nama user
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
               ],
             ),
           );

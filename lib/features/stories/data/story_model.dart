@@ -1,12 +1,10 @@
-class Story {  
+class Story {
   final String id;
-  final String mediaUrl; 
   final String userId;
-  final DateTime createdAt;
-  
   final String userName; 
-  final String? userAvatar;
-  final List<String> mediaUrls; 
+  final String? userAvatar; 
+  final List<String> mediaUrls;
+  final DateTime createdAt;
   final bool isViewed;
 
   Story({
@@ -17,5 +15,5 @@ class Story {
     required this.mediaUrls,
     required this.createdAt,
     this.isViewed = false,
-  }) : mediaUrl = mediaUrls.isNotEmpty ? mediaUrls.first : ''; 
+  });
 }

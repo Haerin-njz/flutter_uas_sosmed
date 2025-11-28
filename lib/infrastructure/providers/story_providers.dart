@@ -1,17 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../features/stories/data/story_model.dart';
 
-// Simple FutureProvider that returns an empty list by default.
-// Replace the body with real data fetching logic as needed.
-final storiesProvider = FutureProvider<List<StoryModel>>((ref) async {
-  // Simulated fetch: replace with repository/service call (e.g. ref.read(storiesRepo).fetchAll())
-  try {
-    await Future.delayed(const Duration(milliseconds: 500)); // simulate network latency
-
-    
-    return <StoryModel>[]; // placeholder empty list to keep API stable
-  } catch (e) {
-    // Propagate error to the FutureProvider so consumers can handle it.
-    throw Exception('Failed to load stories: $e');
-  }
+// Gunakan List<Story>, bukan StoryModel
+final storiesProvider = FutureProvider<List<Story>>((ref) async {
+  await Future.delayed(const Duration(milliseconds: 500));
+  
+  // Return data dummy
+  return [
+    Story(
+      id: '1',
+      userId: 'user1',
+      userName: 'Jojo',
+      userAvatar: 'https://i.pravatar.cc/150?img=11',
+      mediaUrls: ['https://picsum.photos/500/800'],
+      createdAt: DateTime.now(),
+    ),
+    Story(
+      id: '2',
+      userId: 'user2',
+      userName: 'Haerin',
+      mediaUrls: ['https://picsum.photos/500/801'],
+      createdAt: DateTime.now(),
+    ),
+  ];
 });
