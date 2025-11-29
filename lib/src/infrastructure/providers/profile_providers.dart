@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_uas_sosmed/src/infrastructure/providers/feed_providers.dart';
+import 'feed_providers.dart';
 
 /// Simulated profile info provider. Replace with real repository/service.
 final profileInfoProvider = FutureProvider.family<Map<String, String>, String>((ref, userId) async {
