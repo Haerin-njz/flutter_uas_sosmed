@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_uas_sosmed/src/infrastructure/providers/story_providers.dart';
+import '../../../../../infrastructure/story_providers.dart';
 import '../../widgets/story_viewer.dart'; 
 
 class StoriesScreen extends ConsumerWidget {
