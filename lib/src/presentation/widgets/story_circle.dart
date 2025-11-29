@@ -1,53 +1,81 @@
 import 'package:flutter/material.dart';
-import '../../../features/stories/data/story_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../domain/entities/story.dart';
 
 class StoryCircle extends StatelessWidget {
-  final Story story;
-  final VoidCallback onTap;
-
   const StoryCircle({
     super.key,
     required this.story,
-    required this.onTap,
+    this.onTap,
+    this.size = 64.0,
   });
+
+  final Story story;
+  final VoidCallback? onTap;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: story.isViewed ? Colors.grey : Colors.blue,
-                width: 2,
+      child: Container(
+        width: size,
+        height: size,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: story.isViewed
+                    ? null
+                    : const LinearGradient(
+                        colors: [Colors.purple, Colors.orange, Colors.red],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+              ),
+              padding: story.isViewed ? null : const EdgeInsets.all(3),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  border: story.isViewed
+                      ? Border.all(color: Colors.grey.shade300, width: 2)
+                      : null,
+                ),
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: story.userAvatar ?? '',
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Icon(Icons.person, color: Colors.grey),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Icon(Icons.person, color: Colors.grey),
+                    ),
+                  ),
+                ),
               ),
             ),
-            child: CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.grey[300],
-              backgroundImage: (story.userAvatar != null && story.userAvatar!.isNotEmpty)
-                  ? NetworkImage(story.userAvatar!)
-                  : null,
-              child: (story.userAvatar == null || story.userAvatar!.isEmpty)
-                  ? const Icon(Icons.person, color: Colors.white)
-                  : null,
-            ),
-          ),
-          const SizedBox(height: 4),
-          SizedBox(
-            width: 70,
-            child: Text(
-              story.userName,
-              style: const TextStyle(fontSize: 12),
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
+            if (!story.isViewed)
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: const BoxDecoration(
+                    color: Colors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.add, color: Colors.white, size: 14),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

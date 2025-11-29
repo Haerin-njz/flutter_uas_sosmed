@@ -1,162 +1,117 @@
 import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../../features/stories/data/story_model.dart';
+import '../../domain/entities/story.dart';
 
 class StoryViewer extends StatefulWidget {
+  const StoryViewer({super.key, required this.story, this.onComplete});
   final Story story;
-  final VoidCallback onComplete;
-
-  const StoryViewer({
-    super.key,
-    required this.story,
-    required this.onComplete,
-  });
+  final VoidCallback? onComplete;
 
   @override
   State<StoryViewer> createState() => _StoryViewerState();
 }
 
-class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStateMixin {
-  late PageController _pageController;
-  late AnimationController _animController;
-  int _currentIndex = 0;
+class _StoryViewerState extends State<StoryViewer> {
+  int _index = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
-    _animController = AnimationController(vsync: this);
+    _startTimer();
+  }
 
-    _loadStory(0);
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer(const Duration(seconds: 5), _next);
+  }
+
+  void _next() {
+    if (_index < widget.story.mediaUrls.length - 1) {
+      setState(() => _index++);
+      _startTimer();
+    } else {
+      widget.onComplete?.call();
+    }
+  }
+
+  void _prev() {
+    if (_index > 0) {
+      setState(() => _index--);
+      _startTimer();
+    }
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
-    _animController.dispose();
+    _timer?.cancel();
     super.dispose();
-  }
-
-  void _loadStory(int index) {
-    _animController.stop();
-    _animController.reset();
-    _animController.duration = const Duration(seconds: 5); // Durasi per slide
-    _animController.forward().whenComplete(_nextStory);
-  }
-
-  void _nextStory() {
-    if (_currentIndex < widget.story.mediaUrls.length - 1) {
-      setState(() {
-        _currentIndex++;
-      });
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-      _loadStory(_currentIndex);
-    } else {
-      widget.onComplete(); // Panggil callback jika story habis
-    }
-  }
-
-  void _previousStory() {
-    if (_currentIndex > 0) {
-      setState(() {
-        _currentIndex--;
-      });
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-      _loadStory(_currentIndex);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final mediaList = widget.story.mediaUrls;
-
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: GestureDetector(
-        onTapUp: (details) {
-          final width = MediaQuery.of(context).size.width;
-          if (details.globalPosition.dx < width / 3) {
-            _previousStory();
+    final url = widget.story.mediaUrls[_index];
+    return GestureDetector(
+      onTapUp: (details) {
+        final w = MediaQuery.of(context).size.width;
+        if (details.globalPosition.dx < w / 3) {
+          _prev();
+        } else if (details.globalPosition.dx > 2 * w / 3) {
+          _next();
+        } else {
+          // tap center to pause/resume
+          if (_timer?.isActive ?? false) {
+            _timer?.cancel();
           } else {
-            _nextStory();
+            _startTimer();
           }
-        },
-        child: Stack(
-          children: [
-            // Konten Story (Gambar)
-            PageView.builder(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(), // Disable swipe manual agar ikut timer/tap
-              itemCount: mediaList.length,
-              itemBuilder: (context, index) {
-                return Image.network(
-                  mediaList[index],
-                  fit: BoxFit.contain,
-                  loadingBuilder: (ctx, child, progress) {
-                    if (progress == null) return child;
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                  errorBuilder: (ctx, _, __) => const Center(
-                    child: Text('Error loading image', style: TextStyle(color: Colors.white)),
-                  ),
-                );
-              },
-            ),
-
-            // Bar Progress di Atas
-            Positioned(
-              top: 40,
-              left: 10,
-              right: 10,
-              child: Row(
-                children: List.generate(mediaList.length, (index) {
-                  return Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                      child: LinearProgressIndicator(
-                        value: index < _currentIndex
-                            ? 1.0
-                            : index == _currentIndex
-                                ? _animController.value
-                                : 0.0,
-                        backgroundColor: Colors.white24,
-                        valueColor: const AlwaysStoppedAnimation(Colors.white),
+        }
+      },
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          CachedNetworkImage(
+            imageUrl: url,
+            fit: BoxFit.cover,
+            placeholder: (c, s) => Container(color: Colors.black12),
+            errorWidget: (c, s, e) => const Center(child: Icon(Icons.error)),
+          ),
+          Positioned(
+            top: 32,
+            left: 16,
+            right: 16,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: List.generate(widget.story.mediaUrls.length, (i) {
+                    final progress = i < _index ? 1.0 : (i == _index ? 0.5 : 0.0);
+                    return Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withAlpha((0.8 * progress * 255).clamp(0, 255).toInt()),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
-                    ),
-                  );
-                }),
-              ),
+                    );
+                  }),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    CircleAvatar(radius: 18, backgroundImage: widget.story.userAvatar != null ? NetworkImage(widget.story.userAvatar!) : null),
+                    const SizedBox(width: 8),
+                    Text(widget.story.userName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  ],
+                )
+              ],
             ),
-
-            // Info User (Avatar & Nama)
-            Positioned(
-              top: 55,
-              left: 16,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundImage: NetworkImage(widget.story.userAvatar ?? ''),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    widget.story.userName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
