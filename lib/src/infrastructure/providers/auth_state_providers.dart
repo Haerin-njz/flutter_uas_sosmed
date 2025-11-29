@@ -2,10 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_uas_sosmed/data/dummy_data.dart';
 
 /// Holds the currently signed-in user (null when signed out).
-class AuthStateNotifier extends StateNotifier<User?> {
-  AuthStateNotifier(): super(null);
+class AuthStateNotifier extends StateNotifier<DummyUser?> {
+  AuthStateNotifier() : super(null);
 
-  void signInAs(User user) {
+  void signInAs(DummyUser user) {
     state = user;
   }
 
@@ -14,6 +14,7 @@ class AuthStateNotifier extends StateNotifier<User?> {
   }
 }
 
-final authStateProvider = StateNotifierProvider<AuthStateNotifier, User?>((ref) {
+final authStateProvider =
+    StateNotifierProvider<AuthStateNotifier, DummyUser?>((ref) {
   return AuthStateNotifier();
 });
