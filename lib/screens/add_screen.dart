@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uas/src/infrastructure/providers/post_providers.dart';
-import 'package:uas/src/infrastructure/providers/auth_state_provider.dart';
-import 'package:uas/src/domain/entities/post.dart';
+import 'package:flutter_uas_sosmed/infrastructure/providers/post_providers.dart';
+import 'package:flutter_uas_sosmed/infrastructure/providers/auth_state_provider.dart';
+import 'package:flutter_uas_sosmed/infrastructure/providers/feed_providers.dart';
 
 class AddScreen extends ConsumerStatefulWidget {
   const AddScreen({super.key});
@@ -32,7 +32,6 @@ class _AddScreenState extends ConsumerState<AddScreen> {
     }
 
     final imageUrl = _imageController.text.trim();
-    final caption = _captionController.text.trim();
     if (imageUrl.isEmpty) {
       ScaffoldMessenger.of(
         context,
@@ -43,13 +42,8 @@ class _AddScreenState extends ConsumerState<AddScreen> {
     final post = Post(
       id: 'userpost_${DateTime.now().millisecondsSinceEpoch}',
       imageUrl: imageUrl,
-      caption: caption.isEmpty ? null : caption,
       authorId: user.id,
       authorName: user.displayName,
-      authorAvatar: user.avatarUrl,
-      likeCount: 0,
-      liked: false,
-      createdAt: DateTime.now(),
     );
 
     ref.read(postListProvider.notifier).addPost(post);
