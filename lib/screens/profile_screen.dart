@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_uas_sosmed/src/infrastructure/providers/feed_providers.dart';
+import 'package:flutter_uas_sosmed/src/infrastructure/providers/auth_state_providers.dart';
 import '../data/dummy_data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_uas_sosmed/src/infrastructure/providers/auth_state_providers.dart';
 
 class ProfileScreen extends ConsumerWidget {
   final String userId;
