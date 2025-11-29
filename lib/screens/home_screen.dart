@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uas/src/presentation/pages/home/home_screen.dart' as internal;
+import 'package:flutter_uas_sosmed/src/presentation/pages/home/home_screen.dart' as internal;
 
-.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
