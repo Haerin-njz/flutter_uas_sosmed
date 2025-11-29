@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_uas_sosmed/domain/entities/post.dart';
+import 'package:flutter_uas_sosmed/infrastructure/providers/feed_providers.dart';
 
 /// Simulated search provider. Replace with real repository/service.
 final searchPostsProvider = FutureProvider.family<List<Post>, String>((ref, query) async {
