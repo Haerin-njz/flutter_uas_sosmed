@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'src/infrastructure/providers/auth_state_provider.dart';
+import 'src/infrastructure/providers/auth_state_providers.dart';
 import 'router.dart' as app_router;
 import 'package:google_fonts/google_fonts.dart';
 

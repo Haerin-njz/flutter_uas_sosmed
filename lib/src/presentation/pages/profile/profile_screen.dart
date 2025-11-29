@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_uas_sosmed/infrastructure/providers/profile_providers.dart';
+import 'package:flutter_uas_sosmed/src/infrastructure/providers/profile_providers.dart';
 // post_card not directly used here; grid shows images only
 
 class ProfileScreen extends ConsumerWidget {
