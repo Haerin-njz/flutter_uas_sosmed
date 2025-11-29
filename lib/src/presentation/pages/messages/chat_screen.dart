@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uas/src/domain/entities/message.dart';
-import 'package:uas/src/infrastructure/providers/message_providers.dart';
-import 'package:uas/data/dummy_data.dart';
-import 'package:uas/src/infrastructure/providers/auth_state_provider.dart';
+import 'package:flutter_uas_sosmed/src/domain/entities/message.dart';
+import 'package:flutter_uas_sosmed/src/infrastructure/providers/message_providers.dart';
+import 'package:flutter_uas_sosmed/data/dummy_data.dart';
+import 'package:flutter_uas_sosmed/src/infrastructure/providers/auth_state_providers.dart';
 
 class ChatScreen extends ConsumerWidget {
   final Conversation conversation;
