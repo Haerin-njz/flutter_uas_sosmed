@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import '../../domain/entities/story.dart';
 
@@ -53,6 +54,7 @@ class _StoryViewerState extends State<StoryViewer> {
   @override
   Widget build(BuildContext context) {
     final url = widget.story.mediaUrls[_index];
+
     return GestureDetector(
       onTapUp: (details) {
         final w = MediaQuery.of(context).size.width;
@@ -86,19 +88,33 @@ class _StoryViewerState extends State<StoryViewer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: List.generate(widget.story.mediaUrls.length, (i) {
-                    final progress = i < _index ? 1.0 : (i == _index ? 0.5 : 0.0);
-                    return Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                        height: 4,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withAlpha((0.8 * progress * 255).clamp(0, 255).toInt()),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: List.generate(widget.story.mediaUrls.length, (i) {
+                          final progress = i < _index ? 1.0 : (i == _index ? 0.5 : 0.0);
+                          return Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 2),
+                              height: 4,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withAlpha((0.8 * progress * 255).clamp(0, 255).toInt()),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          );
+                        }),
                       ),
-                    );
-                  }),
+                    ),
+                    // Close button on the top-right
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () {
+                        _timer?.cancel();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Row(

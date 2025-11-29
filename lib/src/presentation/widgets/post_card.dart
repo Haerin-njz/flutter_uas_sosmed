@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../domain/entities/post.dart';
+import '../../infrastructure/providers/post_providers.dart';
 
 class PostCard extends ConsumerWidget {
   const PostCard({super.key, required this.post});
@@ -17,39 +18,59 @@ class PostCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
-          ListTile(
-            leading: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(
-                post.authorAvatar ?? '',
-              ),
-              onBackgroundImageError: (_, __) {},
-              child: post.authorAvatar == null
-                  ? Text(post.authorName[0].toUpperCase())
-                  : null,
-            ),
-            title: Text(post.authorName),
-            subtitle: Text(
-              '${DateTime.now().difference(post.createdAt!).inHours.abs()}h ago',
-            ),
-          ),
+          // Header (support network or local asset avatars)
+          Builder(builder: (context) {
+            final avatar = post.authorAvatar ?? '';
+            ImageProvider? avatarProvider;
+            if (avatar.isNotEmpty && avatar.startsWith('http')) {
+              avatarProvider = CachedNetworkImageProvider(avatar);
+            } else if (avatar.isNotEmpty) {
+              avatarProvider = AssetImage(avatar);
+            }
 
-          // Image
-          CachedNetworkImage(
-            imageUrl: post.imageUrl,
-            placeholder: (context, url) => AspectRatio(
-              aspectRatio: 1,
-              child: Container(color: Colors.grey[200]),
-            ),
-            errorWidget: (context, url, error) => AspectRatio(
-              aspectRatio: 1,
-              child: Container(
-                color: Colors.grey[200],
-                child: const Icon(Icons.error),
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: avatarProvider,
+                onBackgroundImageError: (_, __) {},
+                child: avatarProvider == null
+                    ? Text(post.authorName.isNotEmpty
+                        ? post.authorName[0].toUpperCase()
+                        : '?')
+                    : null,
               ),
-            ),
-            fit: BoxFit.cover,
+              title: Text(post.authorName),
+              subtitle: Text(
+                '${DateTime.now().difference(post.createdAt!).inHours.abs()}h ago',
+              ),
+            );
+          }),
+
+          // Image (support network or local asset). Show full image without crop.
+          Container(
+            height: 300,
             width: double.infinity,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            alignment: Alignment.center,
+            child: post.imageUrl.startsWith('http')
+                ? CachedNetworkImage(
+                    imageUrl: post.imageUrl,
+                    placeholder: (context, url) => Container(color: Colors.grey[200]),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.grey[200],
+                      child: const Icon(Icons.error),
+                    ),
+                    fit: BoxFit.contain,
+                    width: double.infinity,
+                  )
+                : Image.asset(
+                    post.imageUrl,
+                    fit: BoxFit.contain,
+                    width: double.infinity,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: Colors.grey[200],
+                      child: const Icon(Icons.error),
+                    ),
+                  ),
           ),
 
           // Actions
@@ -70,8 +91,8 @@ class PostCard extends ConsumerWidget {
                       // Haptic feedback
                       await HapticFeedback.mediumImpact();
 
-                      // Toggle like (in a real app, this would update the provider)
-                      // For now, just show the animation
+                      // Toggle like via provider (updates likeCount and liked)
+                      ref.read(postListProvider.notifier).toggleLike(post.id);
                     },
                   ),
                 ),

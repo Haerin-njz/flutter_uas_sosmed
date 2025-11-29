@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../infrastructure/providers/story_providers.dart';
 import '../../widgets/story_viewer.dart';
 
@@ -21,7 +22,18 @@ class StoriesScreen extends ConsumerWidget {
               leading: CircleAvatar(backgroundImage: NetworkImage(s.userAvatar ?? ''), backgroundColor: Colors.grey[300]),
               title: Text(s.userName),
               subtitle: Text('${s.mediaUrls.length} items'),
-              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(body: StoryViewer(story: s, onComplete: () => Navigator.of(context).pop())))),
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => WillPopScope(
+                    onWillPop: () async {
+                      GoRouter.of(ctx).go('/home');
+                      return false;
+                    },
+                    child: Scaffold(
+                      body: StoryViewer(
+                        story: s,
+                        onComplete: () => GoRouter.of(ctx).go('/home'),
+                      ),
+                    ),
+                  ))),
             );
           },
         ),

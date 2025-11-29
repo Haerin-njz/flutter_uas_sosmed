@@ -4,6 +4,7 @@ import 'package:flutter_uas_sosmed/data/dummy_data.dart';
 import 'package:flutter_uas_sosmed/src/infrastructure/providers/auth_state_providers.dart';
 import 'package:flutter_uas_sosmed/src/infrastructure/providers/message_providers.dart';
 import 'package:flutter_uas_sosmed/src/presentation/pages/messages/chat_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class ConversationsScreen extends ConsumerWidget {
   const ConversationsScreen({super.key});
@@ -13,7 +14,14 @@ class ConversationsScreen extends ConsumerWidget {
     final async = ref.watch(conversationsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Messages'), backgroundColor: Colors.black),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/home'),
+        ),
+        title: Text('Messages'),
+        backgroundColor: Colors.black,
+      ),
       backgroundColor: Colors.black,
       body: async.when(
         data: (items) => ListView.separated(

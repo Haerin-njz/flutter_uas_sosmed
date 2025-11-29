@@ -19,7 +19,7 @@ class FirebaseFeedRepository implements FeedRepository {
 
     return snapshot.docs.map((doc) {
       final data = Map<String, dynamic>.from(
-        doc.data() as Map<String, dynamic>,
+        doc.data(),
       );
       // Ensure an 'id' exists for the Post.
       data['id'] = data['id'] ?? doc.id;

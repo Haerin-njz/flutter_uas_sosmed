@@ -5,11 +5,11 @@ import '../../domain/entities/post.dart';
 final mockPosts = [
   Post(
     id: '1',
-    imageUrl: 'https://picsum.photos/800/600?random=1',
-    caption: 'Beautiful sunset at the beach! 🌅 #sunset #beach #nature',
+    imageUrl: 'public/images/gambar1.jpg',
+    caption: 'Lapar Mo',
     authorId: 'user1',
-    authorName: 'john_doe',
-    authorAvatar: 'https://picsum.photos/100/100?random=1',
+    authorName: 'Rapuy_Nasihuy',
+    authorAvatar: 'public/images/profile1.jpg',
     likeCount: 42,
     liked: false,
     createdAt: DateTime.now().subtract(const Duration(hours: 2)),
@@ -60,6 +60,16 @@ class PostListNotifier extends StateNotifier<AsyncValue<List<Post>>> {
 
   void addPost(Post post) {
     state = state.whenData((posts) => [post, ...posts]);
+  }
+
+  /// Toggle like for a post by id. This updates the `liked` flag and adjusts `likeCount`.
+  void toggleLike(String postId) {
+    state = state.whenData((posts) => posts.map((p) {
+          if (p.id != postId) return p;
+          final currentlyLiked = p.liked;
+          final newCount = currentlyLiked ? (p.likeCount - 1).clamp(0, 999999) : p.likeCount + 1;
+          return p.copyWith(liked: !currentlyLiked, likeCount: newCount);
+        }).toList());
   }
 }
 

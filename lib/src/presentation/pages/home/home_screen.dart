@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/story_list.dart';
 import '../../widgets/post_card.dart';
+import '../../widgets/story_viewer.dart';
 import '../../../infrastructure/providers/story_providers.dart';
 import '../../../infrastructure/providers/post_providers.dart';
 
@@ -39,8 +40,19 @@ class HomeScreen extends ConsumerWidget {
                 data: (stories) => StoryList(
                   stories: stories,
                   onStoryTap: (story) {
-                    // Navigate to story viewer
-                    context.go('/stories/${story.id}');
+                    // Open story viewer full-screen; hardware back goes to /home
+                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => WillPopScope(
+                          onWillPop: () async {
+                            GoRouter.of(ctx).go('/home');
+                            return false;
+                          },
+                          child: Scaffold(
+                            body: StoryViewer(
+                              story: story,
+                              onComplete: () => GoRouter.of(ctx).go('/home'),
+                            ),
+                          ),
+                        )));
                   },
                 ),
                 loading: () => const SizedBox(
