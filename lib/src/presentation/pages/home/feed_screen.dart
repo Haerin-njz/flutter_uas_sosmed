@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../infrastructure/post_providers.dart';
+import '../../../infrastructure/providers/post_providers.dart';
 import '../../widgets/post_card.dart';
 
 class FeedScreen extends ConsumerWidget {

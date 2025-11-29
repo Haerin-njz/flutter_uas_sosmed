@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../../infrastructure/search_providers.dart';
+import '../../../infrastructure/providers/search_providers.dart';
 import '../../widgets/post_card.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {

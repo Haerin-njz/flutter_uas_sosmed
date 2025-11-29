@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../infrastructure/post_providers.dart';
-import '../../infrastructure/auth_state_providers.dart';
-import '../../infrastructure/feed_providers.dart';
+import 'package:flutter_uas_sosmed/src/infrastructure/providers/post_providers.dart';
+import 'package:flutter_uas_sosmed/src/infrastructure/providers/auth_state_providers.dart';
+import 'package:flutter_uas_sosmed/src/domain/entities/post.dart';
 
 class AddScreen extends ConsumerStatefulWidget {
   const AddScreen({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import '../../../../../infrastructure/feed_providers.dart';
-import 'package:flutter_uas_sosmed/src/domain/entities/post.dart';
+import '../../../domain/entities/post.dart';
+import '../../../infrastructure/providers/feed_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
