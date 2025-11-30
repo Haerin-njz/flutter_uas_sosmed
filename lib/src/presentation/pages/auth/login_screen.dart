@@ -142,14 +142,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 12),
                 TextButton(
-                  onPressed: () {
-                    // Sign up isn't implemented in this prototype yet
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Sign up is not implemented yet'),
-                      ),
-                    );
-                  },
+                  onPressed: () => context.push('/register'),
                   child: const Text('Sign Up'),
                 ),
               ],

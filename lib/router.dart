@@ -8,14 +8,17 @@ import 'screens/profile_screen.dart';
 import 'src/presentation/pages/notifications/notifications_screen.dart';
 import 'src/presentation/pages/messages/conversations_screen.dart';
 import 'src/presentation/pages/auth/login_screen.dart';
+import 'src/presentation/pages/auth/register_screen.dart';
 
 GoRouter createRouter({required bool signedIn}) {
   return GoRouter(
     initialLocation: signedIn ? '/home' : '/login',
     redirect: (context, state) {
-      final goingToLogin = state.location == '/login';
-      if (!signedIn && !goingToLogin) return '/login';
-      if (signedIn && goingToLogin) return '/home';
+      // Allow unauthenticated users to access the login and register pages.
+      final publicPaths = ['/login', '/register'];
+      final goingToPublic = publicPaths.contains(state.location);
+      if (!signedIn && !goingToPublic) return '/login';
+      if (signedIn && goingToPublic) return '/home';
       return null;
     },
     routes: [
@@ -23,6 +26,11 @@ GoRouter createRouter({required bool signedIn}) {
         path: '/login',
         name: 'login',
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        name: 'register',
+        builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
         path: '/notifications',
